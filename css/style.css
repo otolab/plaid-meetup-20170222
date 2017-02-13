@@ -1,0 +1,33 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosansjp.css);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+body { font-family: 'Noto Sans Japanese'; }
+h1, h2, h3 {
+  font-family: 'Noto Sans JP';
+  font-weight: normal;
+}
+.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+.inverse {
+  background: #272822;
+  color: #777872;
+  text-shadow: 0 0 20px #333;
+}
+.inverse h1, .inverse h2 {
+  color: #f3f3f3;
+  line-height: 1.0em;
+}
+.cloth img {
+  width: 20%;
+}
+.graph img {
+  width: 50%;
+}
+img {
+  width: 100%;
+}
+.red-text {
+  color: #ff0000;
+}
+.blue-text {
+  color: #0000cc;
+}
