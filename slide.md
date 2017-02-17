@@ -37,8 +37,9 @@ class: center, middle, inverse
 
 ---
 
+「KARTE」
 
-（動画）
+![KARTE](https://karte.io/commons/images/index/video_func_01.gif)
 
 ---
 
@@ -59,7 +60,7 @@ class: center, middle, inverse
 ## Docker導入率
 
 10％くらい  
-まだ全然できてない！
+これから本格導入を進めていきます
 
 
 ---
@@ -76,11 +77,9 @@ CI アンチパターンを3つ紹介します。
 
 ### 責務が多すぎる
 
-テストがコケたのでデバッグしよう！
-「CIが何をしているのか良くわからない」
-
-CIを設定した人しかCIがやっていることの全容を把握できない。(Jenkinsおじさんの職人芸)  
-以下、よくCI/CDに設定されやすい責務の具体例。
+テストがコケたのでデバッグしよう！  
+　　　　　　⇓  
+「CIが何をしているのか把握できない」
 
 1. OSの基本設定
 2. 実行ユーザの作成/アクセス権限の設定
@@ -103,18 +102,16 @@ CIを設定した人しかCIがやっていることの全容を把握できな�
 
 ### 開発環境とCI実行環境が異なる
 
-テストがコケたのでデバッグしよう！
+テストがコケたのでデバッグしよう！  
+　　　　　　⇓  
 「CIと同じ環境を構築できない」
 
-多くのプロジェクトでは少なくとも4つの異なる環境になりえる。  
-環境ごとにOSが異なるために、OSパッケージやライブラリのバージョンが異なる。
-
 1. 開発環境 (Mac/Windows)
-2. 検証環境 (社内インフラが適当に運用してるCentOS)
-3. CI/CD (OS 不明の謎の Linux)
-4. 本番環境 (Amazon Linux)
+2. 検証環境 (インフラエンジニアが適当に運用してる新しい Linux)
+3. CI/CD (情報不明の謎の Linux)
+4. 本番環境 (運用開始から更新されていない Linux)
 
-インフラエンジニアにしか再現できない各種環境
+(＊弊社の環境ではありません)
 
 ---
 
@@ -122,13 +119,14 @@ CIを設定した人しかCIがやっていることの全容を把握できな�
 
 ### CI で発生した問題の再現ができない
 
-テストがコケたのでデバッグしよう！
-「解決するための問題を再現できない」
+テストがコケたのでデバッグしよう！  
+　　　　　　⇓  
+「問題が再現できない」
 
-- CIと同じ環境を用意できない(CIアンチパターン2)
-- CI用に独自のビルドスクリプトやデプロイスクリプト
-- 問題の再現ができない(ローカルだと動くけどCIでは動かない)
-- 解決してもCIを動かさないと動作を確認できない
+1. CIと同じ環境を用意できない
+2. CI用に独自のビルド・デプロイスクリプトを使ってる
+3. 問題の原因が特定できない(環境の問題か、実装の問題か)
+4. 解決してもCIを動かさないと動作を確認できない
 
 ---
 
@@ -143,7 +141,9 @@ class: center, middle, inverse
 
 ## Wercker の基本
 
-（ロゴ）
+.logo[
+![wercker logo](https://raw.githubusercontent.com/wercker/wercker-identity/master/wercker_logo_green.png)
+]
 
 - 基本無料
 - stackshare の Continuous Integration ランキングで6位
@@ -154,11 +154,15 @@ https://stackshare.io/continuous-integration
 
 ## Wercker を使うべき理由 1
 
-### タスクを実行するのにDockerコンテナを使う
+### Docker ネイティブプラットホーム
 
-Wercker は Docker を使うことが前提となっていて Docker コンテナの上でタスクを実行するようになっています。  
-Dockerfile を書く必要はありません。他のCIと同様にymlを書くだけです。
-Docker をベースにしているので Docker コンテナの起動が早い。
+.logo[
+![Containers](https://www.wercker.com/hs-fs/hubfs/container_native_purple_215x125.png?t=1487153244593&width=216&name=container_native_purple_215x125.png)
+]
+
+Wercker は Docker を使うことが前提となっています。  
+Dockerfile を書く必要はありません。他のCIと同様に yaml を書くだけです。
+Docker をベースにしているので Docker コンテナの起動が早いのが特徴です。
 
 ---
 
@@ -166,27 +170,49 @@ Docker をベースにしているので Docker コンテナの起動が早い�
 
 ### ローカルでタスクを実行できる
 
-Wercker Client を使ってローカルの Docker 環境でリモートと全く同じタスクを実行できます(後ほど詳しく紹介)。
-リモートで動かすために wercker.yml に書いたスクリプトをそのままローカル(Docker)で動かせます。
-デバッグが非常に簡単です。
+Client を使ってローカルでリモートと同じタスクを実行できます(後ほど紹介)。  
+wercker.yml に書いたスクリプトをローカルで動かせるので、デバッグが非常に簡単です。
+
+```
+USAGE:
+   wercker [global options] command [command options] [arguments...]
+
+COMMANDS:
+   build, b     build a project
+   dev          develop and run a local project
+   check-config check the project's yaml
+   deploy, d    deploy a project
+   detect, de   detect the type of project
+   login, l     log into wercker
+   logout       logout from wercker
+   pull, p      pull <build id>
+   version, v   print versions
+   doc          Generate usage documentation
+   help, h      Shows a list of commands or help for one command
+```
 
 ---
 
 ## Wercker を使うべき理由 3
 
-### 複数のDockerコンテナをCIから利用可能
+### マイクロサービスに対応している
 
-Wercker Service という機能でデータベースなどを使うことができます(後ほど詳しく紹介)。  
-wercker.yml にデータベースのインストール設定を書く必要はありません。  
-Service の機能も Docker コンテナで実行されます。  
-事前に自前で用意したデータベースなどの Docker コンテナを使うこともできます。
+.logo[
+![Microservices](https://www.wercker.com/hs-fs/hubfs/microservices_purple_215x125.png?t=1487153244593&width=214&name=microservices_purple_215x125.png)
+]
+Wercker Service という機能で複数のコンテナを使うことができます(後ほど紹介)。  
+データベースの Docker コンテナをアプリとは別のコンテナとして扱えます。
+もちろん Service 用の Docker コンテナを自作することもできます。
 
 ---
 
 ## それ以外にも使える Wercker の機能
 
-- タスクのワークフローの作成/変更が簡単
+- タスクのワークフローの作成/変更が簡単  
+GUI または API で設定・実行できる  
+Workflow > Pipeline > Step
 - 他サービスとの連携
+![customisable and  extensible](https://www.wercker.com/hs-fs/hubfs/Platform_context_diagram.svg?t=1487153244593&width=1000&height=372&name=Platform_context_diagram.svg)
 
 ---
 
@@ -194,7 +220,7 @@ Service の機能も Docker コンテナで実行されます。
 
 - スペルが難しい  
 初めは間違えずに入力できない。  
-10回ほど間違えた後に何も見ずに正しく"wercker"と書けるようになったら中級者。
+何も見ずに正しく"wercker"と書けるようになったら中級者。
 
 - タスクのトリガーが不自由  
 一度も実行されてないタスクはGUI(Web Interface)からは実行できない。
@@ -215,31 +241,69 @@ class: center, middle, inverse
 ---
 
 ## Wercker をローカルで動かす
-### Wercker client のインストール
+### Wercker client のセットアップ
+
+以下の手順で wercker cli をセットアップします。
+
+1. docker をインストールする(既にセットアップ済みですよね？)
+2. wercker cli をインストールする
+3. wercker.yml を書く
 
 ---
 
 ## Wercker をローカルで動かす
 ### Wercker client の実行
 
-wercker.yml
-(デモ？)
+```
+wercker dev --pipeline build
+```
+
+ローカルにセットアップした docker engine 上で wercker.yml に記述した任意のタスク(pipeline)を実行できます。  
+つまり、wercker server 上で実行するのと全く同じタスクをローカル環境で動作させられます。  
+どちらも docker 環境で動作するので、原理的には(環境変数以外は)全く同じ挙動をします。
 
 ---
 
 ## Werckerで複数のサービスを使う
-### メインコンテナに mysql-server を入れる
-service を使わない場合の一般的な構成  
-(構成図)  
-wercker.yml
+### service を使わない場合
+1 Container 2 Services
+1つのコンテナに app と db が同居する
+
+```
+build:
+  steps:
+    - install-packages:
+        packages: mysql-server libmysqlclient-dev
+    - pip-install
+    - script:
+        name: python build
+        code: |
+            python build.py
+```
 
 ---
 
 ## Werckerで複数のサービスを使う
-### service で mysql-server を使う
-service を使う場合の構成  
-(構成図)  
-wercker.yml
+### service を使う場合
+2 Container 2 Services  
+docker link 機能を使って app と db をつなぐ
+
+```
+build:
+  services:
+    - id: mysql:5.7
+      env:
+        MYSQL_USER: test
+        MYSQL_PASSWORD: secret
+        MYSQL_DATABASE: user
+        MYSQL_RANDOM_ROOT_PASSWORD: yes
+  steps:
+    - pip-install
+    - script:
+        name: python build
+        code: |
+            python build.py
+```
 
 ---
 
@@ -251,7 +315,7 @@ class: center, middle, inverse
 
 ## まとめ
 
-Wercker を導入すると以下のことができるようになる
+Wercker を導入すると以下のことができるようになります。
 
 - CI と同じ環境を構築できる
 - CI と同じタスクを実行できる
@@ -259,11 +323,13 @@ Wercker を導入すると以下のことができるようになる
 
 Dockerfile が書けるようになったら Wercker を卒業しよう！
 
+今日使った wercker のファイルは以下においてあります。
+https://github.com/algas/wercker-turotial
+
 ---
 
 ## エンジニア募集中！
 
-発表したのはこんな人  
 株式会社プレイド Engineer/Hunter  
 山内雅浩 [@algas](https://github.com/algas)  
 
@@ -271,5 +337,7 @@ Dockerfile が書けるようになったら Wercker を卒業しよう！
 - 2007年未踏本体採択開発者。
 - ゲーム開発ベンチャー、アプリ開発会社CTOを経て、2016年からプレイドに。
 - 趣味はハンティング。
+
+https://algas.github.io/plaid-meetup-20160222
 
 ### プレイドは一緒に未来を創るエンジニアを募集しています！

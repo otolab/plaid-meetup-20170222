@@ -16,11 +16,8 @@ h1, h2, h3 {
   color: #f3f3f3;
   line-height: 1.0em;
 }
-.cloth img {
+.logo img {
   width: 20%;
-}
-.graph img {
-  width: 50%;
 }
 img {
   width: 100%;
@@ -30,4 +27,7 @@ img {
 }
 .blue-text {
   color: #0000cc;
+}
+table {
+  border: 2px;
 }
