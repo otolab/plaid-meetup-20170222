@@ -13,7 +13,7 @@ class: center, middle, inverse
 Engineer/Hunter
 
 山内雅浩  
-.blue-text[@algas]
+@algas
 
 ---
 
@@ -24,7 +24,7 @@ layout: false
 1. サービス紹介
 2. 弊社のDocker導入状況
 3. CIアンチパターン
-4. Wercker を使うべき5つの理由
+4. Werckerを使うべき5つの理由
 5. Werckerの実践的な使い方
 6. Werckerのイケてないところ
 7. 発表のまとめ
@@ -49,18 +49,18 @@ class: center, middle, inverse
 
 ---
 
-## システム構成図
-
----
-
 ## ビルドとデプロイの仕組み
 
----
+開発環境と CI の一部は Docker 対応済み。  
+検証環境と本番環境の Docker 対応はこれから。
 
-## Docker導入率
+1. 開発環境 (macOS + Docker)
+2. 検証環境 (Ubuntu, AWS)
+3. CI (CircleCI, Wercker)
+4. 本番環境 (Ubuntu, AWS + GCP)
 
-10％くらい  
-これから本格導入を進めていきます
+- ビルドは CI で自動化している。
+- デプロイは slack bot にコマンドを投げることで実行する。
 
 
 ---
@@ -317,8 +317,8 @@ class: center, middle, inverse
 
 Wercker を導入すると以下のことができるようになります。
 
-- CI と同じ環境を構築できる
-- CI と同じタスクを実行できる
+- CI と同じ環境をローカルに構築できる
+- CI と同じタスクをローカルで実行できる
 - Dockerfile を書かずに Docker を導入できる
 
 Dockerfile が書けるようになったら Wercker を卒業しよう！

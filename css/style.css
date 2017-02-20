@@ -9,7 +9,7 @@ h1, h2, h3 {
 .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
 .inverse {
   background: #272822;
-  color: #777872;
+  color: #aaaaaa;
   text-shadow: 0 0 20px #333;
 }
 .inverse h1, .inverse h2 {
