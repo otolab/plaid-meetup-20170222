@@ -14,7 +14,7 @@ class: center, middle, inverse
 
 ???
 
-挨拶
+今日は Plaid tech meetup にご参加いただきありがとうございます。
 
 ---
 
@@ -29,11 +29,11 @@ https://algas.github.io/plaid-meetup-20160222
 3. CIアンチパターン
 4. Werckerを使うべき5つの理由
 5. Werckerのイケてないところ
-6. 発表のまとめ
+6. まとめ
 
 ???
 
-今日の発表内容
+今日の発表内容は以上の6つです。
 
 ---
 
@@ -61,8 +61,6 @@ class: center, middle, inverse
 
 ## 環境ごとのDocker導入状況
 
-.table[
-
 環境 | OS | Docker導入
 ---- | -- | ---------
 開発環境 | macOS | ◯
@@ -71,11 +69,9 @@ CircleCI | Ubuntu | ×
 Wercker  | Docker | △
 本番環境 | Ubuntu | ×
 
-]
-
 ???
 
-Docker導入はこれから
+Docker導入はこれから。今日は偉そうに皆さんの前に立っていてもまだまだできてないです。
 
 ---
 
@@ -111,8 +107,8 @@ CI アンチパターンを3つ紹介します。
 
 ???
 
-Docker にやらせていることが多すぎる問題  
-文字が小さくて読めないのは仕様です
+Docker にやらせていることが多すぎる問題。  
+文字が小さくて読めないのは仕様です。
 
 ---
 
@@ -146,7 +142,6 @@ Docker にやらせていることが多すぎる問題
 1. CI用に独自のビルド・デプロイスクリプトを使ってる  
 2. 問題の原因が特定できない(環境の問題か、実装の問題か)  
 3. 解決してもCIを動かさないと動作を確認できない  
-
 
 ---
 
@@ -182,6 +177,14 @@ class: center, middle, inverse
 
 ---
 
+## Wercker の画面
+
+.half[
+![runs](img/wercker-runs.png)
+![workflow](img/wercker-workflow.png)
+]
+---
+
 ## Wercker を使うべき理由 1
 
 ### Docker ネイティブプラットホーム
@@ -190,14 +193,15 @@ class: center, middle, inverse
 ![docker](img/docker-logo.png)
 ]
 
-```yaml
+```
 box:
-  id: "ubuntu:16.04"
+  id: ubuntu:16.04
 ```
 
 ???
 
-Dockerコンテナ上でタスクが実行されます
+Dockerコンテナ上でタスクが実行されます。  
+例えば CircleCI は Ubuntu で動いているらしいです。
 
 ---
 
@@ -205,11 +209,13 @@ Dockerコンテナ上でタスクが実行されます
 
 ローカルでタスクを実行できる
 
-![img](img/wercker-local.gif)
+![local animation](img/wercker-local.gif)
 
 ???
 
-ローカルでDockerコンテナを起動してそこでタスクが実行されます
+ローカルでDockerコンテナを起動してそこでタスクが実行されます。  
+つまり wercker.yml に書いたタスクをローカルで確認してから push できます。  
+他の CI では確認のために何度も git push してしまいますね。
 
 ---
 
@@ -217,7 +223,7 @@ Dockerコンテナ上でタスクが実行されます
 
 マイクロサービス対応前 (single container)
 
-```yaml
+```
 build:
   steps:
     - install-packages:
@@ -234,7 +240,8 @@ build:
 
 ???
 
-1つのコンテナに複数のサービスが同居している
+1つのコンテナに複数のサービスが同居している。  
+他のCIでも仮想ホストOSに複数のサービスをインストールすることになります。
 
 ---
 
@@ -242,7 +249,7 @@ build:
 
 マイクロサービス対応後 (multiple containers)
 
-```yaml
+```
 build:
   services:
     - id: mysql:5.7
@@ -262,18 +269,23 @@ build:
 
 ???
 
-コンテナごとにサービスを分割してリンクさせます
+上記の例ではアプリとDBのコンテナがそれぞれ独立して1つずつで構成されています。  
+コンテナごとにサービスを分割してリンクさせます。
 
 ---
 
-
-## Wercker の特徴
+## その他の Wercker の特徴
 
 - タスクのワークフローの作成/変更が簡単  
 Workflow > Pipeline > Step
 
 - 他サービスとの連携
 ![customisable and  extensible](https://www.wercker.com/hs-fs/hubfs/Platform_context_diagram.svg?t=1487153244593&width=1000&height=372&name=Platform_context_diagram.svg)
+
+???
+
+GUI/APIからPipelineを定義してWorkflowとしてつなぎます。  
+Docker, Chat, Git などの各種サービスと連携できます。
 
 ---
 
@@ -283,11 +295,30 @@ Workflow > Pipeline > Step
 
 - タスクのトリガーが不自由  
 
+- キューの状況がGUIで見れない
+
 - Dockerfileのビルドに向いてない  
 
 - 古いブログは役に立たない
 
-- キューの状況がGUIで見れない
+
+???
+
+wercker って何も見ないで書けますか？  
+私は500回以上書いているのでもう間違えないですがスペルが難しすぎますよね？  
+
+各タスクのトリガーが git push でしかできないのが不便です。  
+GUIからも操作できるとうれしいんですが。
+
+workflow のキューが GUI から分かりにくいので、キューにたまったタスクを把握するのが難しいです。  
+APIからはとれます。。
+
+Dockerネイティブといいつつ Dockerfile のビルドには対応してないんですね。  
+wercker で実行したタスクを docker registry に push する機能はあります。  
+wercker の開発者は Dockerfile が嫌いなんじゃないでしょうか。
+
+途中から Docker ネイティブに変更したせいか、それ以前の wercker との互換性がないので古いブログが全く役に立ちません。  
+公式のドキュメントも充足率が高くはないので情報量は不足気味です。
 
 ---
 
@@ -299,15 +330,23 @@ class: center, middle, inverse
 
 ## まとめ
 
-Wercker を導入すると以下のことができるようになります。
+Wercker を導入すると次のことができるようになります。
 
 - CI と同じ環境をローカルに構築できる
 - CI と同じタスクをローカルで実行できる
 - Dockerfile を書かずに Docker を導入できる
 
+https://github.com/algas/wercker-turotial
+
+???
+
+DockerネイティブなのでCIとローカルで全く同じ環境を簡単に構築できます。
+
+ローカルでタスクの動作を確認してから git push すると確認まで早いしキューに無駄なタスクを積まずに済みます。
+
+Dockerfile を書かなくても運用できるので Docker に慣れていない開発者にも優しいですね。
 
 今日使った wercker のファイルは以下においてあります。
-https://github.com/algas/wercker-turotial
 
 ---
 
@@ -316,7 +355,7 @@ https://github.com/algas/wercker-turotial
 株式会社プレイド Engineer/Hunter  
 山内雅浩 [@algas](https://github.com/algas)  
 
-- 東京大学大学院理学系研究科 博士課程中退。主に人工衛星の開発を担当。
+- 東京大学大学院理学系研究科 博士課程中退。
 - 2007年未踏本体採択開発者。
 - ゲーム開発ベンチャー、アプリ開発会社CTOを経て、2016年からプレイドに。
 
