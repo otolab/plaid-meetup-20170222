@@ -1,14 +1,21 @@
 @import url(https://fonts.googleapis.com/earlyaccess/notosansjp.css);
 @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
 
-body { font-family: 'Noto Sans Japanese'; }
+body {
+  font-family: 'Noto Sans Japanese';
+}
 h1, h2, h3 {
   font-family: 'Noto Sans JP';
   font-weight: normal;
 }
-.remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+.remark-slide-content {
+  font-size: 24px;
+}
+.remark-code, .remark-inline-code {
+  font-family: 'Ubuntu Mono';
+}
 .inverse {
-  background: #272822;
+  background: #000000;
   color: #aaaaaa;
   text-shadow: 0 0 20px #333;
 }
@@ -19,6 +26,9 @@ h1, h2, h3 {
 .logo img {
   width: 20%;
 }
+.half img {
+  width: 50%;
+}
 img {
   width: 100%;
 }
@@ -28,6 +38,14 @@ img {
 .blue-text {
   color: #0000cc;
 }
+.small-text {
+  font-size: 14px;
+}
 table {
-  border: 2px;
+  border: 2px #000000 solid;
+  width: 500px;
+}
+td, th {
+  border: 2px #000000 solid;
+  text-align: center;
 }
