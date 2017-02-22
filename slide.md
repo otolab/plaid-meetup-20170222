@@ -75,6 +75,21 @@ Docker導入はこれから。今日は偉そうに皆さんの前に立って�
 
 ---
 
+## Werckerを何に使っているのか？
+
+KARTE をお客様のウェブサイトで動かす Javascript の配布
+1. ビルド済みの JavaScript を S3 へアップロードする
+2. S3 へアップロードされた Javascript を CDN へ渡す
+
+github で master branch への push (merge) を検知して実行します。
+
+???
+
+CircleCI も合わせて使っています。  
+主にテストの実行とビルドを担当しています。
+
+---
+
 class: center, middle, inverse
 
 # CIアンチパターン
