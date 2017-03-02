@@ -3,4 +3,4 @@
 2017.02.22
 
 - Slide  
-https://algas.github.com/plaid-meetup-20170222/
+https://otolab.github.com/plaid-meetup-20170222/
